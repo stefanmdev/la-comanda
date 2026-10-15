@@ -21,11 +21,11 @@ Alta de usuarios a través del registro y listado de usuarios registrados desde 
 
 ### 3. Catálogo / Carta
 
-Vista pública donde cualquier visitante consulta los platos disponibles, organizados por categoría, con precio y disponibilidad actualizados.
+Vista pública donde cualquier visitante consulta los platos organizados por categoría, con su precio. La disponibilidad del plato está dada por su campo `estado` (activo / inactivo): solo se muestran en la carta los platos activos. _(El control de stock por unidades queda para una etapa posterior.)_
 
 ### 4. ABM de platos (CRUD)
 
-El administrador da de alta, modifica, elimina y lista los platos de la carta (nombre, detalle, precio, categoría, imagen y estado).
+El administrador da de alta, modifica, lista y **desactiva** los platos de la carta (nombre, detalle, precio, categoría, imagen y estado). En lugar de eliminar un plato, se lo **desactiva** (campo `estado` en inactivo): así deja de mostrarse en la carta pero se conservan los pedidos históricos que lo referencian (baja lógica).
 
 ### 5. Carrito y pedidos
 
@@ -37,7 +37,7 @@ El cliente autenticado consulta el historial y el estado de sus propios pedidos.
 
 ### 7. Gestión de pedidos (admin)
 
-El administrador lista todos los pedidos y cambia su estado (pendiente › realizado / cancelado) desde el panel.
+El administrador lista todos los pedidos y cambia su estado desde el panel. Un pedido pasa a **«realizado»** cuando el administrador confirma que fue preparado y entregado en la mesa; pasa a **«cancelado»** si no se concreta. Mientras tanto permanece en **«pendiente»**.
 
 ### 8. API REST y documentación
 

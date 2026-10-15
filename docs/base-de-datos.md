@@ -75,17 +75,17 @@ erDiagram
 
 ## 📁 Colección `platos`
 
-| Campo                     | Tipo (Mongoose / BSON) | Obligatorio | Descripción                                                                                                                  |
-| ------------------------- | ---------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `_id`                     | ObjectId               | sí (auto)   | Identificador único del documento                                                                                            |
-| `nombre`                  | String                 | sí          | Nombre del plato                                                                                                             |
-| `detalle`                 | String                 | no          | Descripción / ingredientes                                                                                                   |
-| `precio`                  | Number                 | sí          | Precio actual del plato                                                                                                      |
-| `categoria`               | String                 | sí          | Categoría (ej. entradas, principales, bebidas). En el MVP es un campo del plato; como colección propia queda para la etapa 2 |
-| `imagen`                  | String                 | no          | URL de la imagen del plato                                                                                                   |
-| `estado`                  | Boolean                | sí          | Activo / inactivo (visible u oculto en la carta). Por defecto `true`                                                         |
-| `stock`                   | Number                 | no          | _(Deseable, etapa 2)_ Unidades disponibles; al llegar a 0 el plato figura «agotado»                                          |
-| `createdAt` / `updatedAt` | Date                   | sí (auto)   | Timestamps automáticos                                                                                                       |
+| Campo                     | Tipo (Mongoose / BSON) | Obligatorio | Descripción                                                                                                                                                                                                                            |
+| ------------------------- | ---------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `_id`                     | ObjectId               | sí (auto)   | Identificador único del documento                                                                                                                                                                                                      |
+| `nombre`                  | String                 | sí          | Nombre del plato                                                                                                                                                                                                                       |
+| `detalle`                 | String                 | no          | Descripción / ingredientes                                                                                                                                                                                                             |
+| `precio`                  | Number                 | sí          | Precio actual del plato                                                                                                                                                                                                                |
+| `categoria`               | String                 | sí          | Categoría (ej. entradas, principales, bebidas). En el MVP es un campo del plato; como colección propia queda para la etapa 2                                                                                                           |
+| `imagen`                  | String                 | no          | URL de la imagen del plato                                                                                                                                                                                                             |
+| `estado`                  | Boolean                | sí          | Disponibilidad del plato: `true` = activo (visible en la carta), `false` = inactivo (oculto). La baja de un plato es lógica: se desactiva, no se elimina, para conservar los pedidos históricos que lo referencian. Por defecto `true` |
+| `stock`                   | Number                 | no          | _(Deseable, etapa 2)_ Unidades disponibles; al llegar a 0 el plato figura «agotado»                                                                                                                                                    |
+| `createdAt` / `updatedAt` | Date                   | sí (auto)   | Timestamps automáticos                                                                                                                                                                                                                 |
 
 **Índices:** `categoria` (para filtrar la carta); `nombre` (búsqueda, etapa 2).
 
@@ -93,15 +93,15 @@ erDiagram
 
 ## 📁 Colección `pedidos`
 
-| Campo                     | Tipo (Mongoose / BSON)                               | Obligatorio | Descripción                                            |
-| ------------------------- | ---------------------------------------------------- | ----------- | ------------------------------------------------------ |
-| `_id`                     | ObjectId                                             | sí (auto)   | Identificador único del documento                      |
-| `usuario`                 | ObjectId (ref → `usuarios`)                          | sí          | Referencia al usuario que realizó el pedido            |
-| `items`                   | Array de subdocumentos                               | sí          | Lista de platos pedidos (ver estructura abajo)         |
-| `total`                   | Number                                               | sí          | Suma de `precioUnitario × cantidad` de todos los ítems |
-| `numeroMesa`              | Number                                               | sí          | Mesa desde la que se realiza el pedido                 |
-| `estado`                  | String (enum: `pendiente`, `realizado`, `cancelado`) | sí          | Estado del pedido. Por defecto `pendiente`             |
-| `createdAt` / `updatedAt` | Date                                                 | sí (auto)   | Timestamps automáticos (fecha del pedido)              |
+| Campo                     | Tipo (Mongoose / BSON)                               | Obligatorio | Descripción                                                    |
+| ------------------------- | ---------------------------------------------------- | ----------- | -------------------------------------------------------------- |
+| `_id`                     | ObjectId                                             | sí (auto)   | Identificador único del documento                              |
+| `usuario`                 | ObjectId (ref → `usuarios`)                          | sí          | Referencia al usuario que realizó el pedido                    |
+| `items`                   | Array de subdocumentos                               | sí          | Lista de platos pedidos (ver estructura abajo)                 |
+| `total`                   | Number                                               | sí          | Suma de `precioUnitario × cantidad` de todos los ítems         |
+| `numeroMesa`              | Number                                               | sí          | Mesa desde la que se realiza el pedido                         |
+| `estado`                  | String (enum: `pendiente`, `realizado`, `cancelado`) | sí          | Estado del pedido (ver detalle abajo). Por defecto `pendiente` |
+| `createdAt` / `updatedAt` | Date                                                 | sí (auto)   | Timestamps automáticos (fecha del pedido)                      |
 
 **Subdocumento de `items` (embebido):**
 
@@ -113,6 +113,12 @@ erDiagram
 | `cantidad`       | Number                    | sí          | Cantidad pedida de ese plato                   |
 
 **Índices:** `usuario` (para listar «mis pedidos»); `estado` (para filtrar en el panel admin).
+
+**Estados del pedido:**
+
+- **`pendiente`:** estado inicial. El cliente confirmó el pedido y todavía no fue atendido.
+- **`realizado`:** el administrador confirma que el pedido fue preparado y entregado en la mesa.
+- **`cancelado`:** el pedido no se concreta (lo anula el administrador).
 
 ---
 
